@@ -1,6 +1,6 @@
 # Juice
 
-[![CI Status](http://img.shields.io/travis/Narek Mailian/Juice.svg?style=flat)](https://travis-ci.org/Narek Mailian/Juice)
+[![CI Status](http://img.shields.io/travis/rundfunk47/Juice.svg?style=flat)](https://travis-ci.org/rundfunk47/Juice)
 [![Version](https://img.shields.io/cocoapods/v/Juice.svg?style=flat)](http://cocoapods.org/pods/Juice)
 [![License](https://img.shields.io/cocoapods/l/Juice.svg?style=flat)](http://cocoapods.org/pods/Juice)
 [![Platform](https://img.shields.io/cocoapods/p/Juice.svg?style=flat)](http://cocoapods.org/pods/Juice)
