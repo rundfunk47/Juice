@@ -1,0 +1,16 @@
+PODS:
+  - Juice (1.0.0)
+
+DEPENDENCIES:
+  - Juice (from `../`)
+
+EXTERNAL SOURCES:
+  Juice:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Juice: 4c0ec8fa724cb06b16187b45f56cac41d1ffae79
+
+PODFILE CHECKSUM: da82ac0c2c252a0242ed8ccf3196826bb0ad6f36
+
+COCOAPODS: 1.0.0

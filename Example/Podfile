@@ -1,0 +1,6 @@
+use_frameworks!
+target 'Juice_Tests' do
+  pod 'Juice', :path => '../'
+  
+  
+end
