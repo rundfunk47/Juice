@@ -4,11 +4,11 @@
 
 osx_image: xcode8
 language: objective-c
-# cache: cocoapods
-# podfile: Example/Podfile
-# before_install:
-# - gem install cocoapods # Since Travis is not always on latest version
-# - pod install --project-directory=Example
+cache: cocoapods
+podfile: Example/Podfile
+before_install:
+- gem install cocoapods --pre # Since Travis is not always on latest version
+- pod install --project-directory=Example
 script:
-- set -o pipefail && xcodebuild test -workspace Example/Juice.xcworkspace -scheme Juice_Tests -sdk iphonesimulator10.0 ONLY_ACTIVE_ARCH=NO -destination 'name=iPhone 7' | xcpretty
+- set -o pipefail && xcodebuild test -workspace Example/Juice.xcworkspace -scheme Juice_Tests -sdk iphonesimulator10.0 ONLY_ACTIVE_ARCH=NO -destination 'name=iPhone SE' | xcpretty
 - pod lib lint
