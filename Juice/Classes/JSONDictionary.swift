@@ -20,6 +20,13 @@ public struct JSONDictionary {
     public init(_ dictionary: JSONConformingDictionary = JSONConformingDictionary()) {
         self._dictionary = dictionary
     }
+    
+    init(_ pairs: [Element]) {
+        self.init()
+        for (k, v) in pairs {
+            self[k] = v
+        }
+    }
 }
 
 // MARK: CustomStringConvertible conformance
