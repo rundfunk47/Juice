@@ -62,5 +62,5 @@ extension String: Decodable {}
 extension Int: Decodable {}
 extension Bool: Decodable {}
 extension Double: Decodable {}
-extension JSONDictionary: InitializableFromJSON {}
-extension JSONArray: InitializableFromJSON {}
+extension JSONDictionary: Decodable {}
+extension JSONArray: Decodable {}
