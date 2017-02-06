@@ -115,9 +115,9 @@ extension JSONDictionary {
 extension JSONDictionary {
     /// Returns a Dictionary with values that are Decodable
     /// - Returns: The dictionary with values that are Decodable
-    public func toDictionary<T: Decodable>() throws -> Dictionary<String, T> {
+    public func toDictionary<T: FactoryDecodable>() throws -> Dictionary<String, T> {
         return try self.map({
-            return try T.init(fromJsonCandidate: $0)
+            return try T.create(fromJsonCandidate: $0)
         })
     }
 }

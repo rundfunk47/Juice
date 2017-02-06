@@ -7,29 +7,31 @@
 //
 
 /// Anything conforming to the `Decodable` protocol can be decoded into a valid Swift-type, given some JSON.
-public protocol Decodable : InitializableFromJSON {}
+public protocol Decodable : FactoryDecodable, InitializableFromJSON {}
+/// Anything conforming to the `FactoryDecodable` protocol can be decoded into a valid Swift-type, given some JSON.
+/// Use when you don't own certain classes and can't provide additional initializers, examples: NSURL or NSUUID
+public protocol FactoryDecodable: CreatableFromJSON {}
 
-/// Anything conforming to the `InitializableFromJSON` protocol can be initialized given some JSON of a certain expected type.
-public protocol InitializableFromJSON {
+public protocol CreatableFromJSON {
     /// The `JSON` which we are expected to be given to be able to initialize the object.
     associatedtype ExpectedDecodeType: JSON
-    /// Implement this initializer in whatever you want to be able to initialize, given an expected type.
-    /// Internally, this will be called after `init(fromJsonCandidate: candidate)` if the type is of the expected type.
-    /// Any errors thrown will be wrapped in a `TypeDecodingError`, also by `init(fromJsonCandidate: candidate)`
+    /// Implement this factory in whatever you want to be able to initialize, given an expected type.
+    /// Internally, this will be called after `create(fromJsonCandidate: candidate)` if the type is of the expected type.
+    /// Any errors thrown will be wrapped in a `TypeDecodingError`, also by `create(fromJsonCandidate: candidate)`
     /// - Parameter fromJson: The `JSON` that will be used to initialize.
-    init(fromJson json: ExpectedDecodeType) throws
+    static func create<T>(fromJson json: ExpectedDecodeType) throws -> T
     /// Try to initialize an object, given a certain `JSON`.
     /// No need to implement this since everything conforming to `InitializableFromJSON` will automatically implement this.
     /// Throws a `TypeDecodingError` if the object couldn't be decoded, or `TypeMismatch` if the type is not the expected type.
     /// - Parameter fromJsonCandidate: The `JSON` that will be used as a candidate to initialize.
-    init(fromJsonCandidate candidate: JSON) throws
+    static func create<T>(fromJsonCandidate candidate: JSON) throws -> T
 }
 
-extension InitializableFromJSON {
-    public init(fromJsonCandidate candidate: JSON) throws {
+extension CreatableFromJSON {
+    public static func create<T>(fromJsonCandidate candidate: JSON) throws -> T {
         if let value = candidate as? ExpectedDecodeType {
             do {
-                try self.init(fromJson: value)
+                return try Self.create(fromJson: value)
             } catch {
                 // Catch the error and wrap it, together with the type which was attempted to be decoded.
                 throw TypeDecodingError(type: Self.self, underlyingError: error)
@@ -37,6 +39,31 @@ extension InitializableFromJSON {
         } else {
             throw MismatchError.typeMismatch(expected: ExpectedDecodeType.self, got: candidate)
         }
+    }
+}
+
+/// Anything conforming to the `InitializableFromJSON` protocol can be initialized given some JSON of a certain expected type.
+public protocol InitializableFromJSON {
+    associatedtype ExpectedDecodeType: JSON
+    /// Implement this initializer in whatever you want to be able to initialize, given an expected type.
+    /// Internally, this will be called after `init(fromJsonCandidate: candidate)` if the type is of the expected type.
+    /// Any errors thrown will be wrapped in a `TypeDecodingError`, also by `init(fromJsonCandidate: candidate)`
+    /// - Parameter fromJson: The `JSON` that will be used to initialize.
+    init(fromJson json: ExpectedDecodeType) throws
+    /// Wrapper around `create(fromJsonCandidate candidate: JSON)` in `CreatableFromJSON`
+    /// - Parameter fromJsonCandidate: The `JSON` that will be used as a candidate to initialize.
+    init(fromJsonCandidate candidate: JSON) throws
+}
+
+extension InitializableFromJSON {
+    public static func create<T>(fromJson json: ExpectedDecodeType) throws -> T {
+        return try Self.init(fromJson: json) as! T
+    }
+}
+
+extension InitializableFromJSON where Self: CreatableFromJSON {
+    public init(fromJsonCandidate candidate: JSON) throws {
+        try self = Self.create(fromJsonCandidate: candidate)
     }
 }
 

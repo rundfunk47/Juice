@@ -13,10 +13,10 @@ public extension JSONDictionary {
     /// - Parameter keyPath: Array of strings.
     /// - Returns: The decoded type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ keyPath: [JSONDictionary.Key]) throws -> T {
+    func decode<T: FactoryDecodable>(_ keyPath: [JSONDictionary.Key]) throws -> T {
         do {
             if let json = self[keyPath] {
-                return try T(fromJsonCandidate: json)
+                return try T.create(fromJsonCandidate: json)
             } else {
                 throw KeyNotFoundError() as Error
             }
@@ -30,11 +30,11 @@ public extension JSONDictionary {
     /// - Parameter keyPath: Array of strings.
     /// - Returns: The decoded type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ keyPath: [JSONDictionary.Key]) throws -> Dictionary<String, T> {
+    func decode<T: FactoryDecodable>(_ keyPath: [JSONDictionary.Key]) throws -> Dictionary<String, T> {
         do {
             if let json = self[keyPath] {
                 return try JSONDictionary(fromJsonCandidate: json).map({
-                    try T(fromJsonCandidate: $0)
+                    try T.create(fromJsonCandidate: $0)
                 })
             } else {
                 throw KeyNotFoundError() as Error
@@ -49,11 +49,11 @@ public extension JSONDictionary {
     /// - Parameter keyPath: Array of strings.
     /// - Returns: The decoded type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ keyPath: [JSONDictionary.Key]) throws -> Array<T> {
+    func decode<T: FactoryDecodable>(_ keyPath: [JSONDictionary.Key]) throws -> Array<T> {
         do {
             if let json = self[keyPath] {
                 return try JSONArray(fromJsonCandidate: json).map({
-                    try T(fromJsonCandidate: $0)
+                    try T.create(fromJsonCandidate: $0)
                 })
             } else {
                 throw KeyNotFoundError() as Error
@@ -72,7 +72,7 @@ public extension JSONDictionary {
     /// - Parameter keyPath: Array of strings.
     /// - Returns: The decoded type, or nil if the key was not found in dictionary.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ keyPath: [JSONDictionary.Key]) throws -> T? {
+    func decode<T: FactoryDecodable>(_ keyPath: [JSONDictionary.Key]) throws -> T? {
         do {
             return try self.decode(keyPath) as T
         } catch let error as DictionaryDecodingError where error.underlyingError is KeyNotFoundError {
@@ -84,7 +84,7 @@ public extension JSONDictionary {
     /// - Parameter keyPath: Array of strings.
     /// - Returns: The decoded type, or nil if the key was not found in dictionary.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ keyPath: [JSONDictionary.Key]) throws -> Dictionary<String, T>? {
+    func decode<T: FactoryDecodable>(_ keyPath: [JSONDictionary.Key]) throws -> Dictionary<String, T>? {
         do {
             return try self.decode(keyPath) as Dictionary<String,T>
         } catch let error as DictionaryDecodingError where error.underlyingError is KeyNotFoundError {
@@ -96,7 +96,7 @@ public extension JSONDictionary {
     /// - Parameter keyPath: Array of strings.
     /// - Returns: The decoded type, or nil if the key was not found in dictionary.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ keyPath: [JSONDictionary.Key]) throws -> Array<T>? {
+    func decode<T: FactoryDecodable>(_ keyPath: [JSONDictionary.Key]) throws -> Array<T>? {
         do {
             return try self.decode(keyPath) as Array<T>
         } catch let error as DictionaryDecodingError where error.underlyingError is KeyNotFoundError {
@@ -112,7 +112,7 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Returns: The decoded type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ key: JSONDictionary.Key) throws -> T {
+    func decode<T: FactoryDecodable>(_ key: JSONDictionary.Key) throws -> T {
         return try self.decode([key]) as T
     }
     
@@ -120,7 +120,7 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Returns: The decoded type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ key: JSONDictionary.Key) throws -> Dictionary<String, T> {
+    func decode<T: FactoryDecodable>(_ key: JSONDictionary.Key) throws -> Dictionary<String, T> {
         return try self.decode([key]) as Dictionary<String, T>
     }
     
@@ -128,7 +128,7 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Returns: The decoded type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ key: JSONDictionary.Key) throws -> Array<T> {
+    func decode<T: FactoryDecodable>(_ key: JSONDictionary.Key) throws -> Array<T> {
         return try self.decode([key]) as Array<T>
     }
 }
@@ -140,7 +140,7 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Returns: The decoded type, or nil if the key was not found in dictionary.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ key: JSONDictionary.Key) throws -> T? {
+    func decode<T: FactoryDecodable>(_ key: JSONDictionary.Key) throws -> T? {
         return try self.decode([key]) as T?
     }
     
@@ -148,7 +148,7 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Returns: The decoded type, or nil if the key was not found in dictionary.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ key: JSONDictionary.Key) throws -> Dictionary<String, T>? {
+    func decode<T: FactoryDecodable>(_ key: JSONDictionary.Key) throws -> Dictionary<String, T>? {
         return try self.decode([key]) as Dictionary<String, T>?
     }
     
@@ -156,7 +156,7 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Returns: The decoded type, or nil if the key was not found in dictionary.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable>(_ key: JSONDictionary.Key) throws -> Array<T>? {
+    func decode<T: FactoryDecodable>(_ key: JSONDictionary.Key) throws -> Array<T>? {
         return try self.decode([key]) as Array<T>?
     }
 }

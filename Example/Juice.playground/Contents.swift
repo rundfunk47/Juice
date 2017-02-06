@@ -87,7 +87,7 @@ struct BadURLError : Error, CustomStringConvertible {
 }
 
 // Possible to decode any type by using transforms:
-struct TransformHomePage {
+struct TransformHomePage: Decodable {
     let title: String
     let url: URL
     
@@ -114,7 +114,18 @@ extension URL: Decodable {
     }
 }
 
-struct ProtocolHomePage {
+// On classes you can't directly modify:
+extension NSURL: FactoryDecodable {
+    public static func create<T>(fromJson json: String) throws -> T {
+        if let url = NSURL(string: json) {
+            return url as! T
+        } else {
+            throw BadURLError(attemptedUrl: json)
+        }
+    }
+}
+
+struct ProtocolHomePage: Decodable {
     let title: String
     let url: URL
     

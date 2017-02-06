@@ -14,7 +14,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the type. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: T) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: T) throws -> U) throws -> U {
         let decodedJson = try self.decode(keyPath) as T
         do {
             return try transform(decodedJson)
@@ -29,7 +29,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the dictionary. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Dictionary<String, T>) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Dictionary<String, T>) throws -> U) throws -> U {
         let decodedJson = try self.decode(keyPath) as Dictionary<String, T>
         do {
             return try transform(decodedJson)
@@ -44,7 +44,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the array. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Array<T>) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Array<T>) throws -> U) throws -> U {
         let decodedJson = try self.decode(keyPath) as Array<T>
         do {
             return try transform(decodedJson)
@@ -63,7 +63,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the type. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: T?) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: T?) throws -> U) throws -> U {
         let decodedJson = try self.decode(keyPath) as T?
         do {
             return try transform(decodedJson)
@@ -78,7 +78,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the dictionary. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Dictionary<String, T>?) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Dictionary<String, T>?) throws -> U) throws -> U {
         let decodedJson = try self.decode(keyPath) as Dictionary<String, T>?
         do {
             return try transform(decodedJson)
@@ -93,7 +93,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the array. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Array<T>?) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ keyPath: [JSONDictionary.Key], transform: (_ input: Array<T>?) throws -> U) throws -> U {
         let decodedJson = try self.decode(keyPath) as Array<T>?
         do {
             return try transform(decodedJson)
@@ -112,7 +112,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the type. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ key: JSONDictionary.Key, transform: (_ input: T) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ key: JSONDictionary.Key, transform: (_ input: T) throws -> U) throws -> U {
         return try self.decode([key], transform: transform)
     }
     
@@ -121,7 +121,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the dictionary. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Dictionary<String, T>) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Dictionary<String, T>) throws -> U) throws -> U {
         return try self.decode([key], transform: transform)
     }
     
@@ -130,7 +130,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the array. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, a `KeyNotFoundError` if key was not found, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Array<T>) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Array<T>) throws -> U) throws -> U {
         return try self.decode([key], transform: transform)
     }
 }
@@ -143,7 +143,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the type. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ key: JSONDictionary.Key, transform: (_ input: T?) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ key: JSONDictionary.Key, transform: (_ input: T?) throws -> U) throws -> U {
         return try self.decode([key], transform: transform)
     }
     
@@ -152,7 +152,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the dictionary. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Dictionary<String, T>?) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Dictionary<String, T>?) throws -> U) throws -> U {
         return try self.decode([key], transform: transform)
     }
     
@@ -161,7 +161,7 @@ public extension JSONDictionary {
     /// - Parameter transform: The transform to apply on the array. Errors thrown here will fail decoding and be wrapped in a `DictionaryDecodingError`.
     /// - Returns: A transformed type.
     /// - Throws: A `DictionaryDecodingError`, or any other error that was encountered when trying to decode.
-    func decode<T: Decodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Array<T>?) throws -> U) throws -> U {
+    func decode<T: FactoryDecodable, U>(_ key: JSONDictionary.Key, transform: (_ input: Array<T>?) throws -> U) throws -> U {
         return try self.decode([key], transform: transform)
     }
 }
