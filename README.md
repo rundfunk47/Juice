@@ -119,6 +119,30 @@ struct ProtocolHomePage {
 }
 ```
 
+...and on classes you can't directly modify:
+
+```swift
+extension NSURL: FactoryDecodable {
+    public static func create<T>(fromJson json: String) throws -> T {
+        if let url = NSURL(string: json) {
+            return url as! T
+        } else {
+            throw BadURLError(attemptedUrl: json)
+        }
+    }
+}
+
+struct ProtocolHomePage {
+    let title: String
+    let url: NSURL
+    
+    init(fromJson json: JSONDictionary) throws {
+        title = try json.decode("title")
+        url = try json.decode("url")
+    }
+}
+```
+
 Juice features precise error throwing:
 ```swift
 do {
