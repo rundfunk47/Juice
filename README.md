@@ -148,9 +148,9 @@ Juice features precise error throwing:
 do {
     let dict = JSONDictionary(["title": "Apple", "url": "ht tps://apple.com"])
     try ProtocolHomePage(fromJson: dict)
-} catch let error as CustomStringConvertible {
+} catch {
     // Error at key path ["url"]: Failure when attempting to decode type URL: Not a valid URL: "ht tps://apple.com"
-    print(error.description)
+    print(error.localizedDescription)
 }
 ```
 

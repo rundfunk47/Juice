@@ -78,10 +78,23 @@ enum Distance: Decodable {
     }
 }
 
-struct BadURLError : Error, CustomStringConvertible {
+struct BadURLError : Error, CustomNSError {
+    /// The user-info dictionary.
+    public var errorUserInfo: [String : Any] {
+        return [NSLocalizedDescriptionKey: localizedDescription]
+    }
+    
+    /// The error code within the given domain.
+    public var errorCode: Int {
+        return 1
+    }
+    
+    /// The domain of the error.
+    public static var errorDomain = "BadURLErrorDomain"
+    
     var attemptedUrl: String
     
-    var description: String {
+    var localizedDescription: String {
         return "Not a valid URL: \"" + attemptedUrl + "\""
     }
 }
@@ -139,7 +152,7 @@ struct ProtocolHomePage: Decodable {
 do {
     let dict = JSONDictionary(["title": "Apple", "url": "ht tps://apple.com"])
     try ProtocolHomePage(fromJson: dict)
-} catch let error as CustomStringConvertible {
+} catch {
     // Error at key path ["url"]: Failure when attempting to decode type URL: Not a valid URL: "ht tps://apple.com"
-    print(error.description)
+    print(error.localizedDescription)
 }
