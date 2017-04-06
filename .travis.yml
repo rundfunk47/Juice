@@ -10,7 +10,7 @@ before_install:
 - gem install cocoapods --pre # Since Travis is not always on latest version
 - pod install --project-directory=Example
 script:
-- set -o pipefail && xcodebuild test -workspace Example/Juice.xcworkspace -scheme Juice_Tests -sdk iphonesimulator10.0 ONLY_ACTIVE_ARCH=NO -destination 'name=iPhone SE' | xcpretty
+- set -o pipefail && xcodebuild test -workspace Example/Juice.xcworkspace -scheme Juice_Tests -sdk iphonesimulator10.3 ONLY_ACTIVE_ARCH=NO -destination 'name=iPhone SE' | xcpretty
 - pod lib lint
 after_success:
 - coveralls
