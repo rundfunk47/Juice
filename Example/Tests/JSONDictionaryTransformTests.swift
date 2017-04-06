@@ -9,6 +9,25 @@
 import XCTest
 @testable import Juice
 
+fileprivate struct MyError: Error, CustomNSError {
+    var localizedDescription: String {
+        return "MyError"
+    }
+    
+    /// The user-info dictionary.
+    public var errorUserInfo: [String : Any] {
+        return [NSLocalizedDescriptionKey: localizedDescription]
+    }
+    
+    /// The error code within the given domain.
+    public var errorCode: Int {
+        return 1
+    }
+    
+    /// The domain of the error.
+    public static var errorDomain = "MyErrorDomain"
+}
+
 class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
     func testTransform() {
         do {
@@ -18,11 +37,7 @@ class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
             })
             XCTAssertEqual(url.absoluteString, "http://www.apple.com")
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -38,9 +53,9 @@ class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["url"])
             let keypathError = "Expected \"String\" got \"Int\" with value 1984."
-            XCTAssertEqual(decodingError.debugDescription, "Error at key path [\"url\"]: " + keypathError)
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"url\"]: " + keypathError)
             guard let mismatchError = decodingError.underlyingError as? MismatchError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.debugDescription, keypathError)
+            XCTAssertEqual(mismatchError.localizedDescription, keypathError)
         }
     }
     
@@ -57,11 +72,7 @@ class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
             })
             XCTAssertNil(url)
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -77,11 +88,7 @@ class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
             })
             XCTAssertEqual(id, "Unknown ID")
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -97,15 +104,13 @@ class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["url"])
             let keypathError = "Key not found."
-            XCTAssertEqual(decodingError.description, "Error at key path [\"url\"]: " + keypathError)
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"url\"]: " + keypathError)
             guard let mismatchError = decodingError.underlyingError as? KeyNotFoundError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.description, keypathError)
+            XCTAssertEqual(mismatchError.localizedDescription, keypathError)
         }
     }
     
     func testErrorPropagationTransform() {
-        struct MyError: Error {}
-        
         do {
             let webpage = JSONDictionary(["url": "http://www.apple.com"])
             _ = try webpage.decode("url", transform: { (input: String) -> URL in
@@ -115,14 +120,12 @@ class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
         } catch {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["url"])
-            XCTAssertEqual(decodingError.description, "Error at key path [\"url\"].")
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"url\"]: MyError")
             XCTAssertTrue(decodingError.underlyingError is MyError)
         }
     }
     
     func testErrorPropagationOptionalTransform() {
-        struct MyError: Error {}
-        
         do {
             let webpage = JSONDictionary(["url": "http://www.apple.com"])
             _ = try webpage.decode("url", transform: { (input: String?) -> URL in
@@ -132,7 +135,7 @@ class JSONDictionaryDecodingTypeTransformTests: XCTestCase {
         } catch {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["url"])
-            XCTAssertEqual(decodingError.description, "Error at key path [\"url\"].")
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"url\"]: MyError")
             XCTAssertTrue(decodingError.underlyingError is MyError)
         }
     }
@@ -147,11 +150,7 @@ class JSONDictionaryDecodingDictionaryTypeTransformTests: XCTestCase {
             })
             XCTAssertEqual(url.absoluteString, "http://www.apple.com")
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -167,9 +166,9 @@ class JSONDictionaryDecodingDictionaryTypeTransformTests: XCTestCase {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["company"])
             let keypathError = "Expected \"JSONDictionary\" got \"Int\" with value 1984."
-            XCTAssertEqual(decodingError.debugDescription, "Error at key path [\"company\"]: " + keypathError)
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"company\"]: " + keypathError)
             guard let mismatchError = decodingError.underlyingError as? MismatchError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.debugDescription, keypathError)
+            XCTAssertEqual(mismatchError.localizedDescription, keypathError)
         }
     }
     
@@ -186,11 +185,7 @@ class JSONDictionaryDecodingDictionaryTypeTransformTests: XCTestCase {
             })
             XCTAssertNil(url)
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -206,11 +201,7 @@ class JSONDictionaryDecodingDictionaryTypeTransformTests: XCTestCase {
             })
             XCTAssertEqual(owns, "Owns nothing")
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -226,15 +217,13 @@ class JSONDictionaryDecodingDictionaryTypeTransformTests: XCTestCase {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["site"])
             let keypathError = "Key not found."
-            XCTAssertEqual(decodingError.description, "Error at key path [\"site\"]: " + keypathError)
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"site\"]: " + keypathError)
             guard let mismatchError = decodingError.underlyingError as? KeyNotFoundError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.description, keypathError)
+            XCTAssertEqual(mismatchError.localizedDescription, keypathError)
         }
     }
     
     func testErrorPropagationTransform() {
-        struct MyError: Error {}
-        
         do {
             let company = JSONDictionary(["company": JSONDictionary(["url": "http://www.apple.com"])])
             _ = try company.decode("company", transform: { (input: Dictionary<String, String>) -> URL in
@@ -244,14 +233,12 @@ class JSONDictionaryDecodingDictionaryTypeTransformTests: XCTestCase {
         } catch {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["company"])
-            XCTAssertEqual(decodingError.description, "Error at key path [\"company\"].")
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"company\"]: MyError")
             XCTAssertTrue(decodingError.underlyingError is MyError)
         }
     }
     
     func testErrorPropagationOptionalTransform() {
-        struct MyError: Error {}
-        
         do {
             let company = JSONDictionary(["company": JSONDictionary(["url": "http://www.apple.com"])])
             _ = try company.decode("company", transform: { (input: Dictionary<String, String>?) -> URL in
@@ -261,7 +248,7 @@ class JSONDictionaryDecodingDictionaryTypeTransformTests: XCTestCase {
         } catch {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["company"])
-            XCTAssertEqual(decodingError.description, "Error at key path [\"company\"].")
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"company\"]: MyError")
             XCTAssertTrue(decodingError.underlyingError is MyError)
         }
     }
@@ -276,11 +263,7 @@ class JSONDictionaryDecodingArrayTypeTransformTests: XCTestCase {
             })
             XCTAssertEqual(added, 15)
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -296,9 +279,9 @@ class JSONDictionaryDecodingArrayTypeTransformTests: XCTestCase {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["numbers"])
             let keypathError = "Expected \"String\" got \"Int\" with value 1."
-            XCTAssertEqual(decodingError.debugDescription, "Error at key path [\"numbers\"]: " + keypathError)
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"numbers\"]: " + keypathError)
             guard let mismatchError = decodingError.underlyingError as? MismatchError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.debugDescription, keypathError)
+            XCTAssertEqual(mismatchError.localizedDescription, keypathError)
         }
     }
     
@@ -315,11 +298,7 @@ class JSONDictionaryDecodingArrayTypeTransformTests: XCTestCase {
             })
             XCTAssertNil(url)
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -335,11 +314,7 @@ class JSONDictionaryDecodingArrayTypeTransformTests: XCTestCase {
             })
             XCTAssertEqual(owns, "No letters")
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -355,15 +330,13 @@ class JSONDictionaryDecodingArrayTypeTransformTests: XCTestCase {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["added"])
             let keypathError = "Key not found."
-            XCTAssertEqual(decodingError.description, "Error at key path [\"added\"]: " + keypathError)
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"added\"]: " + keypathError)
             guard let mismatchError = decodingError.underlyingError as? KeyNotFoundError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.description, keypathError)
+            XCTAssertEqual(mismatchError.localizedDescription, keypathError)
         }
     }
     
     func testErrorPropagationTransform() {
-        struct MyError: Error {}
-        
         do {
             let numbers = JSONDictionary(["numbers": JSONArray([1, 2, 3, 4, 5])])
             _ = try numbers.decode("numbers", transform: { (input: Array<Int>) -> Int in
@@ -373,14 +346,12 @@ class JSONDictionaryDecodingArrayTypeTransformTests: XCTestCase {
         } catch {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["numbers"])
-            XCTAssertEqual(decodingError.description, "Error at key path [\"numbers\"].")
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"numbers\"]: MyError")
             XCTAssertTrue(decodingError.underlyingError is MyError)
         }
     }
     
     func testErrorPropagationOptionalTransform() {
-        struct MyError: Error {}
-        
         do {
             let numbers = JSONDictionary(["numbers": JSONArray([1, 2, 3, 4, 5])])
             _ = try numbers.decode("numbers", transform: { (input: Array<Int>?) -> Int in
@@ -390,7 +361,7 @@ class JSONDictionaryDecodingArrayTypeTransformTests: XCTestCase {
         } catch {
             guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(decodingError.keyPath, ["numbers"])
-            XCTAssertEqual(decodingError.description, "Error at key path [\"numbers\"].")
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"numbers\"]: MyError")
             XCTAssertTrue(decodingError.underlyingError is MyError)
         }
     }

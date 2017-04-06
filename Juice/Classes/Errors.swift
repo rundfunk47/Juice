@@ -6,22 +6,18 @@
 //  Copyright © 2016 Narek. All rights reserved.
 //
 
-internal func typeNameForType(_ thing: Any)->String {
+private func typeNameForType(_ thing: Any)->String {
     return String(describing: thing)
 }
 
-internal func typeNameForValue(_ thing: Any)->String {
+private func typeNameForValue(_ thing: Any)->String {
     return String(describing: Mirror(reflecting: thing).subjectType)
 }
 
 /// Thrown when a non-optional property with a certain key or key path was not found in the `JSONDictionary`.
-open class KeyNotFoundError: Error, CustomStringConvertible, CustomDebugStringConvertible {
-    open var description: String {
+open class KeyNotFoundError: Error {
+    public var localizedDescription: String {
         return "Key not found."
-    }
-    
-    open var debugDescription: String {
-        return self.description
     }
 }
 
@@ -35,22 +31,13 @@ private func extraText(_ text: String?)->String {
 }
 
 /// Mismatch-errors that can be thrown when decoding
-public enum MismatchError: Error , CustomStringConvertible, CustomDebugStringConvertible {
+public enum MismatchError: Error {
     /// Thrown when a certain `JSON` was expected in the initializer, but another one was given instead.
     case typeMismatch(expected: Any, got: JSON)
     /// Thrown when a enum-value could not be mapped, according to its RawValue
     case unmappedEnum(got: JSON)
     
-    public var description: String {
-        switch self {
-        case .typeMismatch(let expected, let got):
-            return "Expected \"" + typeNameForType(expected) + "\" got \"" + typeNameForValue(got) + "\"."
-        case .unmappedEnum(_):
-            return "Enum couldn't be mapped."
-        }
-    }
-    
-    public var debugDescription: String {
+    public var localizedDescription: String {
         switch self {
         case .typeMismatch(let expected, let got):
             return "Expected \"" + typeNameForType(expected) + "\" got \"" + typeNameForValue(got) + "\" with value " + got.jsonString + "."
@@ -61,41 +48,25 @@ public enum MismatchError: Error , CustomStringConvertible, CustomDebugStringCon
 }
 
 /// Thrown if the `decode` method of a `JSONDictionary` failed.
-public struct DictionaryDecodingError: Error, CustomStringConvertible, CustomDebugStringConvertible {
+public struct DictionaryDecodingError: Error {
     /// Path to the key where the decoding failed.
     var keyPath: [String]
     /// The actual error that was thrown when calling the `decode`-method.
     public var underlyingError : Error
     
-    public var description: String {
-        return shortDescription + extraText((underlyingError as? CustomStringConvertible)?.description)
-    }
-    
-    public var debugDescription: String {
-        return shortDescription + extraText((underlyingError as? CustomDebugStringConvertible)?.debugDescription)
-    }
-    
-    internal var shortDescription: String {
-        return "Error at key path " + keyPath.description
+    public var localizedDescription: String {
+        return "Error at key path " + keyPath.description + extraText(underlyingError.localizedDescription)
     }
 }
 
 /// Thrown if the type could not be decoded.
-public struct TypeDecodingError: Error, CustomStringConvertible, CustomDebugStringConvertible {
+public struct TypeDecodingError: Error {
     /// The type which was attempted to be decoded.
     var type: Any
     /// The actual error that was thrown when attempting to decode.
     public var underlyingError : Error
     
-    public var description: String {
-        return shortDescription + extraText((underlyingError as? CustomStringConvertible)?.description)
-    }
-    
-    public var debugDescription: String {
-        return shortDescription + extraText((underlyingError as? CustomDebugStringConvertible)?.debugDescription)
-    }
-    
-    internal var shortDescription: String {
-        return "Failure when attempting to decode type " + typeNameForType(type)
+    public var localizedDescription: String {
+        return "Failure when attempting to decode type " + typeNameForType(type) + extraText(underlyingError.localizedDescription)
     }
 }

@@ -31,11 +31,7 @@ class SerializationHelperTests: XCTestCase {
             XCTAssertTrue(array.contains(2))
             XCTAssertTrue(array.contains(3))
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
 }

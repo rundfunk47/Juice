@@ -61,10 +61,10 @@ public func toStrictlyTypedJSON(_ object: AnyObject) throws ->JSON {
         return JSONArray(try array.map({try toStrictlyTypedJSON($0)}))
     }
     
-    if let number = object as? NSNumber , number.isBool {
-        return number as Bool
-    } else if let number = object as? NSNumber , number.isInt {
-        return number as Int
+    if let number = object as? NSNumber , number.isBool, let bool = object as? Bool {
+        return bool
+    } else if let number = object as? NSNumber , number.isInt, let int = number as? Int {
+        return int
     } else if let double = object as? Double {
         return double as Double
     }

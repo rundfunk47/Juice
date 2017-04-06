@@ -50,11 +50,7 @@ class DecodingTests: XCTestCase {
             XCTAssertEqual(employee.name, "John Doe")
             XCTAssertEqual(employee.hourlyWage, 8.31)
         } catch {
-            if let description = (error as? CustomStringConvertible)?.description {
-                XCTFail(description)
-            } else {
-                XCTFail()
-            }
+            XCTFail(error.localizedDescription)
         }
     }
     
@@ -71,26 +67,26 @@ class DecodingTests: XCTestCase {
             guard let departmentDecodingError = dictionaryDecodingError.underlyingError as? TypeDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(String(describing: Mirror(reflecting: departmentDecodingError.type).subjectType), "Department.Type")
             guard let enumDecodingError = departmentDecodingError.underlyingError as? MismatchError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(enumDecodingError.debugDescription, "Enum couldn\'t be mapped with gotten value \"unknown\".")
-            XCTAssertEqual(employeeDecodingError.debugDescription, "Failure when attempting to decode type Employee: Error at key path [\"Departments\"]: Failure when attempting to decode type Department: Enum couldn\'t be mapped with gotten value \"unknown\".")
+            XCTAssertEqual(enumDecodingError.localizedDescription, "Enum couldn\'t be mapped with gotten value \"unknown\".")
+            XCTAssertEqual(employeeDecodingError.localizedDescription, "Failure when attempting to decode type Employee: Error at key path [\"Departments\"]: Failure when attempting to decode type Department: Enum couldn\'t be mapped with gotten value \"unknown\".")
             
             // Test CustomNSError:
             let nserror = (employeeDecodingError as NSError)
             XCTAssertEqual(nserror.domain, "JuiceErrorDomain")
             XCTAssertEqual(nserror.code, JuiceTypeDecodingError)
-            XCTAssertEqual(nserror.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Employee.")
+            XCTAssertEqual(nserror.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Employee: Error at key path [\"Departments\"]: Failure when attempting to decode type Department: Enum couldn\'t be mapped with gotten value \"unknown\".")
             let underlyingnserror1 = nserror.userInfo[NSUnderlyingErrorKey] as? NSError
             XCTAssertEqual(underlyingnserror1?.domain, "JuiceErrorDomain")
             XCTAssertEqual(underlyingnserror1?.code, JuiceDictionaryDecodingError)
-            XCTAssertEqual(underlyingnserror1?.userInfo[NSLocalizedDescriptionKey] as? String, "Error at key path [\"Departments\"].")
+            XCTAssertEqual(underlyingnserror1?.userInfo[NSLocalizedDescriptionKey] as? String, "Error at key path [\"Departments\"]: Failure when attempting to decode type Department: Enum couldn\'t be mapped with gotten value \"unknown\".")
             let underlyingnserror2 = underlyingnserror1?.userInfo[NSUnderlyingErrorKey] as? NSError
             XCTAssertEqual(underlyingnserror2?.domain, "JuiceErrorDomain")
             XCTAssertEqual(underlyingnserror2?.code, JuiceTypeDecodingError)
-            XCTAssertEqual(underlyingnserror2?.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Department.")
+            XCTAssertEqual(underlyingnserror2?.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Department: Enum couldn\'t be mapped with gotten value \"unknown\".")
             let underlyingnserror3 = underlyingnserror2?.userInfo[NSUnderlyingErrorKey] as? NSError
             XCTAssertEqual(underlyingnserror3?.domain, "JuiceErrorDomain")
             XCTAssertEqual(underlyingnserror3?.code, JuiceUnmappedEnum)
-            XCTAssertEqual(underlyingnserror3?.userInfo[NSLocalizedDescriptionKey] as? String, "Enum couldn't be mapped.")
+            XCTAssertEqual(underlyingnserror3?.userInfo[NSLocalizedDescriptionKey] as? String, "Enum couldn't be mapped with gotten value \"unknown\".")
         }
     }
     
@@ -105,22 +101,22 @@ class DecodingTests: XCTestCase {
             guard let dictionaryDecodingError = employeeDecodingError.underlyingError as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(dictionaryDecodingError.keyPath, ["Departments"])
             guard let mismatchError = dictionaryDecodingError.underlyingError as? MismatchError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.debugDescription, "Expected \"String\" got \"Int\" with value 4.")
-            XCTAssertEqual(employeeDecodingError.debugDescription, "Failure when attempting to decode type Employee: Error at key path [\"Departments\"]: Expected \"String\" got \"Int\" with value 4.")
+            XCTAssertEqual(mismatchError.localizedDescription, "Expected \"String\" got \"Int\" with value 4.")
+            XCTAssertEqual(employeeDecodingError.localizedDescription, "Failure when attempting to decode type Employee: Error at key path [\"Departments\"]: Expected \"String\" got \"Int\" with value 4.")
             
             // Test CustomNSError:
             let nserror = (employeeDecodingError as NSError)
             XCTAssertEqual(nserror.domain, "JuiceErrorDomain")
             XCTAssertEqual(nserror.code, JuiceTypeDecodingError)
-            XCTAssertEqual(nserror.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Employee.")
+            XCTAssertEqual(nserror.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Employee: Error at key path [\"Departments\"]: Expected \"String\" got \"Int\" with value 4.")
             let underlyingnserror1 = nserror.userInfo[NSUnderlyingErrorKey] as? NSError
             XCTAssertEqual(underlyingnserror1?.domain, "JuiceErrorDomain")
             XCTAssertEqual(underlyingnserror1?.code, JuiceDictionaryDecodingError)
-            XCTAssertEqual(underlyingnserror1?.userInfo[NSLocalizedDescriptionKey] as? String, "Error at key path [\"Departments\"].")
+            XCTAssertEqual(underlyingnserror1?.userInfo[NSLocalizedDescriptionKey] as? String, "Error at key path [\"Departments\"]: Expected \"String\" got \"Int\" with value 4.")
             let underlyingnserror2 = underlyingnserror1?.userInfo[NSUnderlyingErrorKey] as? NSError
             XCTAssertEqual(underlyingnserror2?.domain, "JuiceErrorDomain")
             XCTAssertEqual(underlyingnserror2?.code, JuiceTypeMismatch)
-            XCTAssertEqual(underlyingnserror2?.userInfo[NSLocalizedDescriptionKey] as? String, "Expected \"String\" got \"Int\".")
+            XCTAssertEqual(underlyingnserror2?.userInfo[NSLocalizedDescriptionKey] as? String, "Expected \"String\" got \"Int\" with value 4.")
         }
     }
     
@@ -135,18 +131,18 @@ class DecodingTests: XCTestCase {
             guard let dictionaryDecodingError = employeeDecodingError.underlyingError as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(dictionaryDecodingError.keyPath, ["Age"])
             guard let mismatchError = dictionaryDecodingError.underlyingError as? KeyNotFoundError else {XCTFail("Wrong kind of error..."); return}
-            XCTAssertEqual(mismatchError.debugDescription, "Key not found.")
-            XCTAssertEqual(employeeDecodingError.debugDescription, "Failure when attempting to decode type Employee: Error at key path [\"Age\"]: Key not found.")
+            XCTAssertEqual(mismatchError.localizedDescription, "Key not found.")
+            XCTAssertEqual(employeeDecodingError.localizedDescription, "Failure when attempting to decode type Employee: Error at key path [\"Age\"]: Key not found.")
             
             // Test CustomNSError:
             let nserror = (employeeDecodingError as NSError)
             XCTAssertEqual(nserror.domain, "JuiceErrorDomain")
             XCTAssertEqual(nserror.code, JuiceTypeDecodingError)
-            XCTAssertEqual(nserror.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Employee.")
+            XCTAssertEqual(nserror.userInfo[NSLocalizedDescriptionKey] as? String, "Failure when attempting to decode type Employee: Error at key path [\"Age\"]: Key not found.")
             let underlyingnserror1 = nserror.userInfo[NSUnderlyingErrorKey] as? NSError
             XCTAssertEqual(underlyingnserror1?.domain, "JuiceErrorDomain")
             XCTAssertEqual(underlyingnserror1?.code, JuiceDictionaryDecodingError)
-            XCTAssertEqual(underlyingnserror1?.userInfo[NSLocalizedDescriptionKey] as? String, "Error at key path [\"Age\"].")
+            XCTAssertEqual(underlyingnserror1?.userInfo[NSLocalizedDescriptionKey] as? String, "Error at key path [\"Age\"]: Key not found.")
             let underlyingnserror2 = underlyingnserror1?.userInfo[NSUnderlyingErrorKey] as? NSError
             XCTAssertEqual(underlyingnserror2?.domain, "JuiceErrorDomain")
             XCTAssertEqual(underlyingnserror2?.code, JuiceKeyNotFound)

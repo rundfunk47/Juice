@@ -18,7 +18,7 @@ import Foundation
 extension KeyNotFoundError: CustomNSError {
     /// The user-info dictionary.
     public var errorUserInfo: [String : Any] {
-        return [NSLocalizedDescriptionKey: description]
+        return [NSLocalizedDescriptionKey: localizedDescription]
     }
     
     /// The error code within the given domain.
@@ -33,7 +33,7 @@ extension KeyNotFoundError: CustomNSError {
 extension MismatchError: CustomNSError {
     /// The user-info dictionary.
     public var errorUserInfo: [String : Any] {
-        return [NSLocalizedDescriptionKey: description]
+        return [NSLocalizedDescriptionKey: localizedDescription]
     }
     
     /// The error code within the given domain.
@@ -53,7 +53,7 @@ extension MismatchError: CustomNSError {
 extension DictionaryDecodingError: CustomNSError {
     /// The user-info dictionary.
     public var errorUserInfo: [String : Any] {
-        return [NSLocalizedDescriptionKey: shortDescription + ".", NSUnderlyingErrorKey: underlyingError as NSError]
+        return [NSLocalizedDescriptionKey: localizedDescription, NSUnderlyingErrorKey: underlyingError as NSError]
     }
     
     /// The error code within the given domain.
@@ -68,7 +68,7 @@ extension DictionaryDecodingError: CustomNSError {
 extension TypeDecodingError: CustomNSError {
     /// The user-info dictionary.
     public var errorUserInfo: [String : Any] {
-        return [NSLocalizedDescriptionKey: shortDescription + ".", NSUnderlyingErrorKey: underlyingError as NSError]
+        return [NSLocalizedDescriptionKey: localizedDescription, NSUnderlyingErrorKey: underlyingError as NSError]
     }
     
     /// The error code within the given domain.
