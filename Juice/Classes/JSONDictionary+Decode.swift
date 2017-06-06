@@ -33,7 +33,7 @@ public extension JSONDictionary {
     func decode<T: FactoryDecodable>(_ keyPath: [JSONDictionary.Key]) throws -> Dictionary<String, T> {
         do {
             if let json = self[keyPath] {
-                return try JSONDictionary(fromJsonCandidate: json).mapPairs({
+                return try JSONDictionary(fromJsonCandidate: json).map({
                     try ($0.key, T.create(fromJsonCandidate: $0.value))
                 })
             } else {

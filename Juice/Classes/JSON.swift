@@ -50,7 +50,7 @@ extension JSONDictionary: JSON {
         return "{" + contents + "}"
     }
     public func toLooselyTypedObject() -> AnyObject {
-        return self.mapPairs({($0.key, $0.value.toLooselyTypedObject())}) as AnyObject
+        return self.map({($0.key, $0.value.toLooselyTypedObject())}) as AnyObject
     }
 }
 
