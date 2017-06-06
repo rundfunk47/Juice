@@ -44,7 +44,7 @@ extension Double: JSON {
 extension JSONDictionary: JSON {
     public var jsonString: String {
         let contents = self.map { arg -> String in
-            let (key, value) = arg;
+            let (key, value) = arg
             return key.jsonString + ": " + value.jsonString
         }.sorted(by: <).joined(separator: ", ")
         return "{" + contents + "}"
