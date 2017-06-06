@@ -36,7 +36,7 @@ extension Array where Element: Encodable {
 // Not conforming to protocol due to limitations in Swift, but still implements encode:
 extension Dictionary where Key: CustomStringConvertible, Value: Encodable {
     public func encode() throws -> JSONDictionary {
-        return JSONDictionary(try self.map{return (JSONDictionary.Key(describing: $0), try $1.encode() as JSONDictionary.Value)})
+        return JSONDictionary(try self.map{return (JSONDictionary.Key(describing: $0.0), try $0.1.encode() as JSONDictionary.Value)})
     }
 }
 

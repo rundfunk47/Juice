@@ -19,7 +19,7 @@ extension Dictionary {
 extension Dictionary {
     /// Applies a map on the values in a given `Dictionary`. Shamelessly stolen from http://stackoverflow.com/questions/24116271/whats-the-cleanest-way-of-applying-map-to-a-dictionary-in-swift
     func map<OutValue>(_ transform: (Value) throws -> OutValue) rethrows -> [Key: OutValue] {
-        return Dictionary<Key, OutValue>(try map { (k, v) in (k, try transform(v)) })
+        return Dictionary<Key, OutValue>(try map { let (k, v) = $0; return (k, try transform(v)) })
     }
     
     /// Applies a filter on the values in a given `Dictionary`.

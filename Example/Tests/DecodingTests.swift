@@ -12,13 +12,13 @@ import XCTest
 
 /// A collection of tests to fully decode a custom object.
 class DecodingTests: XCTestCase {
-    enum Department: String, Decodable {
+    enum Department: String, Juice.Decodable {
         case sales
         case personnel
         case engineering
     }
     
-    struct Employee: Decodable {
+    struct Employee: Juice.Decodable {
         let age: Int
         let departments: Array<Department>
         let hourlyWage: Double

@@ -1,7 +1,7 @@
 import Juice
 
 // To make a model Decodable and Encodable:
-struct Car: Decodable, Encodable {
+struct Car: Juice.Decodable, Juice.Encodable {
     let model: String
     let color: String
     
@@ -18,7 +18,7 @@ struct Car: Decodable, Encodable {
     }
 }
 
-struct Person: Decodable, Encodable {
+struct Person: Juice.Decodable, Juice.Encodable {
     let title: String
     let firstName: String
     let lastName: String
@@ -54,14 +54,14 @@ let person = try! Person(fromJson: toStrictlyTypedJSON(toLooselyTypedJSON(string
 try! person.encode().jsonString
 
 // A Decodable and Encodable enum with raw value:
-enum PhoneNumberType: String, Decodable, Encodable {
+enum PhoneNumberType: String, Juice.Decodable, Juice.Encodable {
     case home
     case office
     case mobile
 }
 
 // A decodable enum without raw value:
-enum Distance: Decodable {
+enum Distance: Juice.Decodable {
     case reallyClose
     case close
     case far
@@ -100,7 +100,7 @@ struct BadURLError : Error, CustomNSError {
 }
 
 // Possible to decode any type by using transforms:
-struct TransformHomePage: Decodable {
+struct TransformHomePage: Juice.Decodable {
     let title: String
     let url: URL
     
@@ -117,7 +117,7 @@ struct TransformHomePage: Decodable {
 }
 
 // Or by using protocol extensions:
-extension URL: Decodable {
+extension URL: Juice.Decodable {
     public init(fromJson json: String) throws {
         if let url = URL(string: json) {
             self = url
@@ -128,7 +128,7 @@ extension URL: Decodable {
 }
 
 // On classes you can't directly modify:
-extension NSURL: FactoryDecodable {
+extension NSURL: Juice.FactoryDecodable {
     public static func create<T>(fromJson json: String) throws -> T {
         if let url = NSURL(string: json) {
             return url as! T
@@ -138,7 +138,7 @@ extension NSURL: FactoryDecodable {
     }
 }
 
-struct ProtocolHomePage: Decodable {
+struct ProtocolHomePage: Juice.Decodable {
     let title: String
     let url: URL
     

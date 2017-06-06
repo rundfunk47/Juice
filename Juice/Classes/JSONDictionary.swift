@@ -13,7 +13,7 @@ public typealias JSONConformingDictionary = Dictionary<JSONDictionary.Key, JSOND
 public struct JSONDictionary {
     public typealias Key = String
     public typealias Value = JSON
-    public typealias Element = (Key, Value)
+    public typealias Element = (key: Key, value: Value)
     
     fileprivate var _dictionary: JSONConformingDictionary
 
@@ -84,9 +84,17 @@ extension JSONDictionary: Collection {
 
 extension JSONDictionary {
     /// Applies a map on the values in a given `JSONDictionary`. Shamelessly stolen from http://stackoverflow.com/questions/24116271/whats-the-cleanest-way-of-applying-map-to-a-dictionary-in-swift
-    func map<OutValue>(_ transform: @escaping (Value) throws -> OutValue) rethrows -> [Key: OutValue] {
-        return Dictionary<Key, OutValue>(try map { (k, v) in (k, try transform(v)) })
-    }    
+    /*func mapValue<OutValue>(_ transform: @escaping (Key, Value) throws -> (OutValue)) rethrows -> [Key: OutValue] {
+        return Dictionary<Key, OutValue>(try map { (arg) in
+            let (k, v) = arg
+            let transformed = try transform(k, v)
+            return transformed
+        })
+    }*/
+    
+    func mapPairs<OutKey, OutValue>(_ transform: (Element) throws -> (OutKey, OutValue)) rethrows -> [OutKey: OutValue] {
+        return Dictionary<OutKey, OutValue>(try map(transform))
+    }
 }
 
 public extension JSONDictionary {
@@ -108,7 +116,9 @@ extension JSONDictionary {
     /// Returns the dictionary with values that are AnyObject, for usage by networking code
     /// - Returns: The dictionary with values that are AnyObject
     public func toLooselyTypedDictionary()->Dictionary<String, AnyObject> {
-        return self.map({$0.toLooselyTypedObject()})
+        return self.mapPairs({
+            return ($0.key, $0.value.toLooselyTypedObject())
+        })
     }
 }
 
@@ -116,8 +126,8 @@ extension JSONDictionary {
     /// Returns a Dictionary with values that are Decodable
     /// - Returns: The dictionary with values that are Decodable
     public func toDictionary<T: FactoryDecodable>() throws -> Dictionary<String, T> {
-        return try self.map({
-            return try T.create(fromJsonCandidate: $0)
+        return try self.mapPairs({
+            return try ($0.key, T.create(fromJsonCandidate: $0.value))
         })
     }
 }

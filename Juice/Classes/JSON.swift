@@ -43,11 +43,14 @@ extension Double: JSON {
 
 extension JSONDictionary: JSON {
     public var jsonString: String {
-        let contents = self.map({$0.jsonString + ": " + $1.jsonString}).sorted(by: <).joined(separator: ", ")
+        let contents = self.map { arg -> String in
+            let (key, value) = arg;
+            return key.jsonString + ": " + value.jsonString
+        }.sorted(by: <).joined(separator: ", ")
         return "{" + contents + "}"
     }
     public func toLooselyTypedObject() -> AnyObject {
-        return self.map({$0.toLooselyTypedObject()}) as AnyObject
+        return self.mapPairs({($0.key, $0.value.toLooselyTypedObject())}) as AnyObject
     }
 }
 

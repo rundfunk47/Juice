@@ -26,7 +26,7 @@ class JSONDictionaryTests: XCTestCase {
 }
 
 class JSONDictionaryEncodingTypeTests: XCTestCase {
-    enum Title: String, Encodable {
+    enum Title: String, Juice.Encodable {
         case mr = "Mr."
         case mrs = "Mrs."
         case ms = "Ms."
