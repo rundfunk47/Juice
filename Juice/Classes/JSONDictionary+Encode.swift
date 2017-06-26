@@ -63,6 +63,17 @@ public extension JSONDictionary {
     /// Encodes a type in the dictionary, given a keypath.
     /// - Parameter keyPath: Array of strings.
     /// - Parameter value: What to encode.
+    mutating func encode(_ keyPath: [String], value: JSONDictionary?) throws {
+        guard let val = value else {return}
+        self = try doOnDictionary(self, keyPath: keyPath, closure: {
+            (dictionary, key) in
+            dictionary[key] = JSONDictionary(val.map({$0}))
+        })
+    }
+    
+    /// Encodes a type in the dictionary, given a keypath.
+    /// - Parameter keyPath: Array of strings.
+    /// - Parameter value: What to encode.
     mutating func encode<T:Encodable>(_ keyPath: [String], value: Array<T?>?) throws {
         guard let val = value else {return}
         self = try doOnDictionary(self, keyPath: keyPath, closure: {
@@ -100,6 +111,13 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Parameter value: What to encode.
     mutating func encode<T:Encodable>(_ key: String, value: Dictionary<String, T>?) throws {
+        try self.encode([key], value: value)
+    }
+    
+    /// Encodes a type in the dictionary, given a key.
+    /// - Parameter key: String.
+    /// - Parameter value: What to encode.
+    mutating func encode(_ key: String, value: JSONDictionary?) throws {
         try self.encode([key], value: value)
     }
     

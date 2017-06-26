@@ -40,6 +40,15 @@ public extension JSONDictionary {
     /// - Parameter key: String.
     /// - Parameter value: What to encode.
     /// - Parameter transform: The transform to apply
+    mutating func encode<T: Encodable>(_ key: String, value: T, transform: (_ input: T) throws -> JSONDictionary) throws {
+        let transformedValue = try transform(value)
+        try self.encode(key, value: transformedValue)
+    }
+    
+    /// Encodes a type in the dictionary, given a key.
+    /// - Parameter key: String.
+    /// - Parameter value: What to encode.
+    /// - Parameter transform: The transform to apply
     mutating func encode<T, U: Encodable>(_ key: String, value: T, transform: (_ input: T) throws -> Array<U?>) throws {
         let transformedValue = try transform(value)
         try self.encode(key, value: transformedValue)
