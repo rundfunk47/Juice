@@ -14,7 +14,18 @@ public protocol JSON {
 }
 
 extension String: JSON {
-    public var jsonString: String {return "\"" + self + "\""}
+    public var jsonString: String {
+        return "\"" + self
+            .replacingOccurrences(of: "\"", with: "\\\"")
+            .replacingOccurrences(of: "/", with: "\\/")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\u{8}", with: "\\b")
+            .replacingOccurrences(of: "\u{12}", with: "\\f")
+            .replacingOccurrences(of: "\r", with: "\\r")
+            .replacingOccurrences(of: "\t", with: "\\t")
+            + "\""
+    }
+
     public func toLooselyTypedObject() -> AnyObject {
         return self as AnyObject
     }

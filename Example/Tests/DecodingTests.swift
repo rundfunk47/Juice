@@ -35,9 +35,9 @@ class DecodingTests: XCTestCase {
     }
     
     func testPrinting() {
-        let john = JSONDictionary(["Age": 35, "Departments": JSONArray(["sales", "engineering"]), "Name": "John Doe", "HourlyWage": 8.31, "Working": true])
+        let john = JSONDictionary(["Age": 35, "Departments": JSONArray(["sales", "engineering"]), "Name": "John \"Albert\" Doe", "HourlyWage": 8.31, "Working": true])
         let jane = JSONDictionary(["Age": 32, "Departments": JSONArray(["engineering"]), "Name": "Jane Doe", "HourlyWage": 9.20, "Working": false])
-        XCTAssertEqual(john.jsonString,"{\"Age\": 35, \"Departments\": [\"sales\", \"engineering\"], \"HourlyWage\": 8.31, \"Name\": \"John Doe\", \"Working\": true}")
+        XCTAssertEqual(john.jsonString,"{\"Age\": 35, \"Departments\": [\"sales\", \"engineering\"], \"HourlyWage\": 8.31, \"Name\": \"John \\\"Albert\\\" Doe\", \"Working\": true}")
         XCTAssertEqual(jane.jsonString, "{\"Age\": 32, \"Departments\": [\"engineering\"], \"HourlyWage\": 9.2, \"Name\": \"Jane Doe\", \"Working\": false}")
     }
     
