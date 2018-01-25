@@ -120,6 +120,15 @@ class DecodingTests: XCTestCase {
         }
     }
     
+    func testDouble() {
+        do {
+            let dictionary = JSONDictionary(["Age": 35, "Departments": JSONArray(["sales", "engineering"]), "Name": "John Doe", "HourlyWage": 8, "Working": true])
+            _ = try Employee(fromJsonCandidate: dictionary)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
     func testObjectFailureDecodingKeyNotFound() {
         do {
             let dictionary = JSONDictionary(["Departments": JSONArray(["sales", "engineering"]), "Name": "John Doe", "HourlyWage": 8.31, "Working": true])

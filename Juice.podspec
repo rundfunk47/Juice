@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Juice'
-  s.version          = '1.0.8'
+  s.version          = '1.0.9'
   s.summary          = 'A modern and simple JSON Encoder / Decoder for Swift 3'
 
 # This description is used to generate tags and improve search results.

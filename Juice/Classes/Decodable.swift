@@ -88,6 +88,28 @@ extension JSON where Self: InitializableFromJSON {
 extension String: Decodable {}
 extension Int: Decodable {}
 extension Bool: Decodable {}
-extension Double: Decodable {}
+extension Double: Decodable {
+    // Fix for bug https://github.com/rundfunk47/Juice/issues/2
+    
+    public static func create<T>(fromJsonCandidate candidate: JSON) throws -> T {
+        if let value = candidate as? Double {
+            do {
+                return try Double.create(fromJson: value)
+            } catch {
+                // Catch the error and wrap it, together with the type which was attempted to be decoded.
+                throw TypeDecodingError(type: Double.self, underlyingError: error)
+            }
+        } else if let value = candidate as? Int {
+            do {
+                return try Double.create(fromJson: Double(value))
+            } catch {
+                // Catch the error and wrap it, together with the type which was attempted to be decoded.
+                throw TypeDecodingError(type: Double.self, underlyingError: error)
+            }
+        } else {
+            throw MismatchError.typeMismatch(expected: ExpectedDecodeType.self, got: candidate)
+        }
+    }
+}
 extension JSONDictionary: Decodable {}
 extension JSONArray: Decodable {}
