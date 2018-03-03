@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/cocoapods/l/Juice.svg?style=flat)](http://cocoapods.org/pods/Juice)
 [![Platform](https://img.shields.io/cocoapods/p/Juice.svg?style=flat)](http://cocoapods.org/pods/Juice)
 
-🍎 Juice is a modern and simple JSON Encoder / Decoder for Swift 3 🍎
+🥤 Juice is a modern and simple JSON Encoder / Decoder for Swift 3+ 🥤
 
 ## Features:
 * Written to take full advantage of Swift's ability to throw errors.
