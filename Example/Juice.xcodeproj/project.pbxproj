@@ -12,6 +12,7 @@
 		EB0806011D9926160053BF6C /* JSONDictionaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0805FD1D9926160053BF6C /* JSONDictionaryTests.swift */; };
 		EB0806021D9926160053BF6C /* JSONDictionaryTransformTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0805FE1D9926160053BF6C /* JSONDictionaryTransformTests.swift */; };
 		EB0806031D9926160053BF6C /* SerializationHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0805FF1D9926160053BF6C /* SerializationHelperTests.swift */; };
+		F397C6F7204B614F00C1E57C /* NumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F397C6F6204B614F00C1E57C /* NumberTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		EB0805FD1D9926160053BF6C /* JSONDictionaryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONDictionaryTests.swift; sourceTree = "<group>"; };
 		EB0805FE1D9926160053BF6C /* JSONDictionaryTransformTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONDictionaryTransformTests.swift; sourceTree = "<group>"; };
 		EB0805FF1D9926160053BF6C /* SerializationHelperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerializationHelperTests.swift; sourceTree = "<group>"; };
+		F397C6F6204B614F00C1E57C /* NumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				EB0805FD1D9926160053BF6C /* JSONDictionaryTests.swift */,
 				EB0805FE1D9926160053BF6C /* JSONDictionaryTransformTests.swift */,
 				EB0805FF1D9926160053BF6C /* SerializationHelperTests.swift */,
+				F397C6F6204B614F00C1E57C /* NumberTests.swift */,
 				EB0805FB1D9926160053BF6C /* Juice_Tests-Bridging-Header.h */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
@@ -232,6 +235,7 @@
 			files = (
 				EB0806001D9926160053BF6C /* DecodingTests.swift in Sources */,
 				EB0806021D9926160053BF6C /* JSONDictionaryTransformTests.swift in Sources */,
+				F397C6F7204B614F00C1E57C /* NumberTests.swift in Sources */,
 				EB0806031D9926160053BF6C /* SerializationHelperTests.swift in Sources */,
 				EB0806011D9926160053BF6C /* JSONDictionaryTests.swift in Sources */,
 			);

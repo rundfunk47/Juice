@@ -51,17 +51,11 @@ public func toLooselyTypedJSON(_ string: String) throws -> AnyObject {
 public func toStrictlyTypedJSON(_ object: AnyObject) throws ->JSON {
     if let string = object as? String {
         return string
-    }
-    
-    if let dictionary = object as? Dictionary<String, AnyObject> {
+    } else if let dictionary = object as? Dictionary<String, AnyObject> {
         return JSONDictionary(try dictionary.map({try toStrictlyTypedJSON($0)}))
-    }
-    
-    if let array = object as? Array<AnyObject> {
+    } else if let array = object as? Array<AnyObject> {
         return JSONArray(try array.map({try toStrictlyTypedJSON($0)}))
-    }
-    
-    if let number = object as? NSNumber , number.isBool, let bool = object as? Bool {
+    } else if let number = object as? NSNumber , number.isBool, let bool = object as? Bool {
         return bool
     } else if let number = object as? NSNumber , number.isInt, let int = number as? Int {
         return int

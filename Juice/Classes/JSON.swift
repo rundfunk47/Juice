@@ -48,7 +48,8 @@ extension Bool: JSON {
 extension Double: JSON {
     public var jsonString: String {return String(self)}
     public func toLooselyTypedObject() -> AnyObject {
-        return self as AnyObject
+        // Prevent rounding error
+        return NSDecimalNumber(string: String(self))
     }
 }
 
