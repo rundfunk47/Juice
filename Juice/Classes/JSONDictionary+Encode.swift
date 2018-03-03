@@ -78,7 +78,10 @@ public extension JSONDictionary {
         guard let val = value else {return}
         self = try doOnDictionary(self, keyPath: keyPath, closure: {
             (dictionary, key) in
-            dictionary[key] = JSONArray(try val.filter{$0 != nil}.map{try $0!.encode()})
+            dictionary[key] = JSONArray(try val.map{
+                guard let value = $0 else { return NSNull() }
+                return try value.encode()
+            })
         })
     }
     
@@ -89,7 +92,10 @@ public extension JSONDictionary {
         guard let val = value else {return}
         self = try doOnDictionary(self, keyPath: keyPath, closure: {
             (dictionary, key) in
-            dictionary[key] = JSONDictionary(try val.filter{$0.value != nil}.map{try $0!.encode()})
+            dictionary[key] = JSONDictionary(try val.map{
+                guard let value = $0 else { return NSNull() }
+                return try value.encode()
+            })
         })
     }
     

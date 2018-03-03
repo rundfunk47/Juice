@@ -22,7 +22,7 @@ public protocol CreatableFromJSON {
     static func create<T>(fromJson json: ExpectedDecodeType) throws -> T
     /// Try to initialize an object, given a certain `JSON`.
     /// No need to implement this since everything conforming to `InitializableFromJSON` will automatically implement this.
-    /// Throws a `TypeDecodingError` if the object couldn't be decoded, or `TypeMismatch` if the type is not the expected type.
+    /// Throws a `TypeDecodingError` if the object couldn't be decoded, `TypeMismatch` if the type is not the expected type or a `KeyIsNullError' if the object is `null`.
     /// - Parameter fromJsonCandidate: The `JSON` that will be used as a candidate to initialize.
     static func create<T>(fromJsonCandidate candidate: JSON) throws -> T
 }
@@ -36,6 +36,8 @@ extension CreatableFromJSON {
                 // Catch the error and wrap it, together with the type which was attempted to be decoded.
                 throw TypeDecodingError(type: Self.self, underlyingError: error)
             }
+        } else if candidate is NSNull {
+            throw KeyIsNullError()
         } else {
             throw MismatchError.typeMismatch(expected: ExpectedDecodeType.self, got: candidate)
         }
@@ -106,10 +108,13 @@ extension Double: Decodable {
                 // Catch the error and wrap it, together with the type which was attempted to be decoded.
                 throw TypeDecodingError(type: Double.self, underlyingError: error)
             }
+        } else if candidate is NSNull {
+            throw KeyIsNullError()
         } else {
             throw MismatchError.typeMismatch(expected: ExpectedDecodeType.self, got: candidate)
         }
     }
 }
+extension NSNull: Decodable {}
 extension JSONDictionary: Decodable {}
 extension JSONArray: Decodable {}

@@ -52,6 +52,13 @@ extension Double: JSON {
     }
 }
 
+extension NSNull: JSON {
+    public var jsonString: String {return "null"}
+    public func toLooselyTypedObject() -> AnyObject {
+        return self as AnyObject
+    }
+}
+
 extension JSONDictionary: JSON {
     public var jsonString: String {
         let contents = self.map { arg -> String in

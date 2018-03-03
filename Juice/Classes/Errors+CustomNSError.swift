@@ -12,8 +12,24 @@ public let JuiceTypeMismatch = 2
 public let JuiceUnmappedEnum = 3
 public let JuiceDictionaryDecodingError = 4
 public let JuiceTypeDecodingError = 5
+public let JuiceKeyIsNull = 6
 
 import Foundation
+
+extension KeyIsNullError: CustomNSError {
+    /// The user-info dictionary.
+    public var errorUserInfo: [String : Any] {
+        return [NSLocalizedDescriptionKey: localizedDescription]
+    }
+    
+    /// The error code within the given domain.
+    public var errorCode: Int {
+        return JuiceKeyIsNull
+    }
+    
+    /// The domain of the error.
+    public static var errorDomain = JuiceErrorDomain
+}
 
 extension KeyNotFoundError: CustomNSError {
     /// The user-info dictionary.

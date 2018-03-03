@@ -67,6 +67,8 @@ public func toStrictlyTypedJSON(_ object: AnyObject) throws ->JSON {
         return int
     } else if let double = object as? Double {
         return double as Double
+    } else if let null = object as? NSNull {
+        return null
     }
     
     throw NotDecodableJSONError() as Error

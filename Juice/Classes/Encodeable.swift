@@ -44,3 +44,4 @@ extension String: Encodable {}
 extension Int: Encodable {}
 extension Bool: Encodable {}
 extension Double: Encodable {}
+extension NSNull: Encodable {}

@@ -66,7 +66,7 @@ class JSONDictionaryEncodingTypeTests: XCTestCase {
     func testEncodeArrayWithOptionalInside() {
         var dictionary = JSONDictionary()
         try! dictionary.encode("numbers", value: [1, 2, nil, 4])
-        XCTAssertEqual(dictionary.jsonString, "{\"numbers\": [1, 2, 4]}")
+        XCTAssertEqual(dictionary.jsonString, "{\"numbers\": [1, 2, null, 4]}")
     }
     
     func testEncodeDictionary() {
@@ -86,7 +86,7 @@ class JSONDictionaryEncodingTypeTests: XCTestCase {
         var dictionary = JSONDictionary()
         let insideDictionary: Dictionary<String, String?>? = ["firstName": "John", "middleName": nil, "lastName": "Doe"]
         try! dictionary.encode(["name"], value: insideDictionary)
-        XCTAssertEqual(dictionary.jsonString, "{\"name\": {\"firstName\": \"John\", \"lastName\": \"Doe\"}}")
+        XCTAssertEqual(dictionary.jsonString, "{\"name\": {\"firstName\": \"John\", \"lastName\": \"Doe\", \"middleName\": null}}")
     }
 }
 
@@ -138,6 +138,78 @@ class JSONDictionaryDecodingTypeTests: XCTestCase {
             XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"genre\"]: " + keypathError)
             guard let keyNotFoundError = decodingError.underlyingError as? KeyNotFoundError else {XCTFail("Wrong kind of error..."); return}
             XCTAssertEqual(keyNotFoundError.localizedDescription, keypathError)
+        }
+    }
+    
+    func testNull() {
+        do {
+            let astrid = JSONDictionary(["name": "Astrid Lindgren", "genre": NSNull(), "language": "Swedish"])
+            let decoded = try astrid.decode("genre") as String?
+            XCTAssertNil(decoded)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testNullKeyType() {
+        do {
+            let astrid = JSONDictionary(["name": "Astrid Lindgren", "genre": NSNull(), "language": "Swedish"])
+            _ = try astrid.decode("genre") as String
+            XCTFail("Should have failed.")
+        } catch {
+            guard let decodingError = error as? DictionaryDecodingError else {XCTFail("Wrong kind of error..."); return}
+            XCTAssertEqual(decodingError.keyPath, ["genre"])
+            let keypathError = "Key is null."
+            XCTAssertEqual(decodingError.localizedDescription, "Error at key path [\"genre\"]: " + keypathError)
+            guard let keyNotFoundError = decodingError.underlyingError as? KeyIsNullError else {XCTFail("Wrong kind of error..."); return}
+            XCTAssertEqual(keyNotFoundError.localizedDescription, keypathError)
+        }
+    }
+    
+    func testNullArrayDecode() {
+        do {
+            let numbers = JSONDictionary(["numbers": JSONArray([1, 2, NSNull(), 4])])
+            let array = try numbers.decode("numbers") as Array<Int?>
+            XCTAssertEqual(array[0], 1)
+            XCTAssertEqual(array[1], 2)
+            XCTAssertNil(array[2])
+            XCTAssertEqual(array[3], 4)
+            XCTAssertEqual(array.count, 4)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testNullOptionalArrayDecode() {
+        do {
+            let numbers = JSONDictionary(["numbers": NSNull()])
+            let array = try numbers.decode("numbers") as Array<Int?>?
+            XCTAssertNil(array)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testNullDictionaryDecode() {
+        do {
+            let names = JSONDictionary(["names": JSONDictionary(["firstName":"John", "middleName":NSNull(), "lastName":"Doe"])])
+            let dictionary = try names.decode("names") as Dictionary<String, String?>
+            XCTAssertEqual(dictionary["firstName"]!, "John")
+            XCTAssertEqual(dictionary["lastName"]!, "Doe")
+            XCTAssertNil(dictionary["middleName"]!)
+            XCTAssertEqual(dictionary.count, 3)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testNullOptionalDictionaryDecode() {
+        do {
+            let names = JSONDictionary(["names": NSNull()])
+            let dictionary = try names.decode("names") as Dictionary<String, String?>?
+            XCTAssertNil(dictionary)
+        } catch {
+            XCTFail(error.localizedDescription)
         }
     }
 }

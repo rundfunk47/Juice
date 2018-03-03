@@ -15,6 +15,13 @@ private func typeNameForValue(_ thing: Any)->String {
 }
 
 /// Thrown when a non-optional property with a certain key or key path was not found in the `JSONDictionary`.
+open class KeyIsNullError: Error {
+    public var localizedDescription: String {
+        return "Key is null."
+    }
+}
+
+/// Thrown when a non-optional property with a certain key or key path was not found in the `JSONDictionary`.
 open class KeyNotFoundError: Error {
     public var localizedDescription: String {
         return "Key not found."
