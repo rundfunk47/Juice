@@ -7,7 +7,7 @@
 //
 
 /// Any data type that can be represented in JSON is conforming to this protocol.
-/// These are: `String`, `Int`, `Bool`, `Double`, `JSONDictionary` and `JSONArray`
+/// These are: `String`, `Int`, `Bool`, `Double`, `NSNull`, `JSONDictionary` and `JSONArray`
 public protocol JSON {
     var jsonString: String {get}
     func toLooselyTypedObject()->AnyObject
