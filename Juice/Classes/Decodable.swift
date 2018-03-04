@@ -22,7 +22,7 @@ public protocol CreatableFromJSON {
     static func create<T>(fromJson json: ExpectedDecodeType) throws -> T
     /// Try to initialize an object, given a certain `JSON`.
     /// No need to implement this since everything conforming to `InitializableFromJSON` will automatically implement this.
-    /// Throws a `TypeDecodingError` if the object couldn't be decoded, `TypeMismatch` if the type is not the expected type or a `KeyIsNullError' if the object is `null`.
+    /// Throws a `TypeDecodingError` if the object couldn't be decoded, `TypeMismatch` if the type is not the expected type or a `KeyIsNullError` if the object is `null`.
     /// - Parameter fromJsonCandidate: The `JSON` that will be used as a candidate to initialize.
     static func create<T>(fromJsonCandidate candidate: JSON) throws -> T
 }
