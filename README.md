@@ -1,5 +1,7 @@
 # Juice
 
+-- unsupported please use Encodable/Decodable ---
+
 [![CI Status](http://img.shields.io/travis/rundfunk47/Juice.svg?style=flat)](https://travis-ci.org/rundfunk47/Juice)
 [![Version](https://img.shields.io/cocoapods/v/Juice.svg?style=flat)](http://cocoapods.org/pods/Juice)
 [![License](https://img.shields.io/cocoapods/l/Juice.svg?style=flat)](http://cocoapods.org/pods/Juice)
